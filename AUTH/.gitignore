@@ -14,6 +14,8 @@ test/
 *.spec.js
 *.test.ts
 *.spec.ts
+jest.config.js
+jest.setup.js
 
 # Coverage and test artifacts
 coverage/

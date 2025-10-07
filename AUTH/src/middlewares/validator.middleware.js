@@ -35,8 +35,33 @@ const registerValidations = [
     respondWithValidationErrors
 ]
 
+const loginValidations = [
+    body("email")
+        .optional()
+        .isEmail()
+        .withMessage("Invalid email address"),
+    body("username")
+        .optional()
+        .isString()
+        .withMessage("Username must be a string"),
+    body("password")
+        .isLength({ min: 6 })
+        .withMessage("Password must be at least 6 characters long")
+        .notEmpty()
+        .withMessage("Password is required"),
+
+    (req, res, next) => {
+        if (!req.body.email && !req.body.username) {
+            return res.status(400).json({ error: "Either email or username is required" })
+        }
+        next();
+    },
+    respondWithValidationErrors
+]
+
 module.exports = {
-    registerValidations
+    registerValidations,
+    loginValidations
 }
 
 

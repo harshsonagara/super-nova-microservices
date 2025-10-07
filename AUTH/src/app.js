@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+
 // mount routes
 const authRoutes = require('./routes/auth.routes');
 app.use('/api/auth', authRoutes);

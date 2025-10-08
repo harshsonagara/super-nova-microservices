@@ -5,6 +5,7 @@ const authController = require('../controllers/auth.controller');
 const authMiddlewares = require('../middlewares/auth.middleware');
 
 
+//** User Routes */
 
 // POST /api/auth/register
 router.post('/register', validators.registerValidations, authController.registerUser);
@@ -18,6 +19,8 @@ router.get('/me', authMiddlewares.authMiddleware, authController.getCrrentUser);
 // GET /api/auth/logout
 router.get('/logout', authController.logoutUser);
 
+
+//** Address Routes */
 
 // GET /auth/users/me/addresses
 router.get('/users/me/addresses', authMiddlewares.authMiddleware, authController.getUserAddresses);

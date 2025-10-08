@@ -92,6 +92,11 @@ const addUserAddressValidations = [
         .optional()
         .isBoolean()
         .withMessage('isDefault must be a boolean'),
+    body("role")
+        .optional()
+        .isIn(['user', 'seller'])
+        .withMessage("Role must be either 'user' or 'seller'"),
+
     respondWithValidationErrors
 ]
 

@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 async function registerUser(req, res) {
 
     try {
-        const { username, email, password, fullName: { firstName, lastName } } = req.body;
+        const { username, email, password, fullName: { firstName, lastName } , role} = req.body;
 
         const isUserAlreadyExists = await userModel.findOne({
             $or: [
@@ -27,8 +27,9 @@ async function registerUser(req, res) {
             username,
             email,
             password: hash,
-            fullName: { firstName, lastName }
-        })
+            fullName: { firstName, lastName },
+            role: role || 'user'
+        });
 
         const token = jwt.sign({
             id: user._id,
@@ -194,7 +195,7 @@ async function deleteUserAddress(req, res) {
     const id = req.user.id;
 
     const { addressId } = req.params;
-    
+
     // Invalid ObjectId should be treated as not found
     if (!mongoose.Types.ObjectId.isValid(addressId)) {
         return res.status(404).json({ message: "Address not found" });

@@ -9,7 +9,6 @@ const respondWithValidationErrors = (req, res, next) => {
     next();
 }
 
-
 const registerValidations = [
     body("username")
         .isString()
@@ -59,9 +58,48 @@ const loginValidations = [
     respondWithValidationErrors
 ]
 
+const addUserAddressValidations = [
+
+    body('street')
+        .isString()
+        .withMessage('Street must be a string')
+        .notEmpty()
+        .withMessage('Street is required'),
+    body('city')
+        .isString()
+        .withMessage('city must be a string')
+        .notEmpty()
+        .withMessage('city is required'),
+    body('state')
+        .isString()
+        .withMessage('sate must be a string')
+        .notEmpty()
+        .withMessage('state is required'),
+    body('pincode')
+        .isString()
+        .withMessage('pincode must be a string')
+        .notEmpty()
+        .withMessage('pincode is required')
+        .bail()
+        .matches(/^\d{4,}$/)
+        .withMessage('Pincode must be at least 4 digits'),
+    body('country')
+        .isString()
+        .withMessage('Country must be a string')
+        .notEmpty()
+        .withMessage('Country is required'),
+    body('isDefault')
+        .optional()
+        .isBoolean()
+        .withMessage('isDefault must be a boolean'),
+    respondWithValidationErrors
+]
+
+
 module.exports = {
     registerValidations,
-    loginValidations
+    loginValidations,
+    addUserAddressValidations
 }
 
 

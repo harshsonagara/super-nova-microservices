@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const userModel = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const redis = require('../db/redis');
+const mongoose = require('mongoose');
 
 
 async function registerUser(req, res) {
@@ -145,10 +146,91 @@ async function logoutUser(req, res) {
     });
 }
 
+async function getUserAddresses(req, res) {
+    const id = req.user.id;
 
+    const user = await userModel.findById(id).select('addresses');
 
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
 
+    return res.status(200).json({
+        message: "User addresses fetched successfully",
+        addresses: user.addresses
+    })
+}
 
+async function addUserAddress(req, res) {
+
+    const id = req.user.id;
+
+    const { street, city, state, pincode, country, isDefault } = req.body;
+
+    const user = await userModel.findOneAndUpdate({ _id: id }, {
+        $push: {
+            addresses: {
+                street,
+                city,
+                state,
+                pincode,
+                country,
+                isDefault
+            }
+        }
+    }, { new: true });
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(201).json({
+        message: "Address added successfully",
+        address: user.addresses[user.addresses.length - 1]
+    });
+}
+
+async function deleteUserAddress(req, res) {
+    const id = req.user.id;
+
+    const { addressId } = req.params;
+    
+    // Invalid ObjectId should be treated as not found
+    if (!mongoose.Types.ObjectId.isValid(addressId)) {
+        return res.status(404).json({ message: "Address not found" });
+    }
+
+    try {
+        const isAddressExists = await userModel.findOne({ _id: id, 'addresses._id': addressId });
+        if (!isAddressExists) {
+            return res.status(404).json({ message: "Address not found" });
+        }
+
+        const user = await userModel.findOneAndUpdate({ _id: id }, {
+            $pull: {
+                addresses: { _id: addressId }
+            }
+        }, { new: true });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const addressExists = user.addresses.some(addr => addr._id.toString() === addressId);
+
+        if (addressExists) {
+            return res.status(500).json({ message: "Failed to delete address" });
+        }
+
+        return res.status(200).json({
+            message: "Address deleted successfully",
+            addresses: user.addresses
+        });
+    } catch (error) {
+        console.error('Error deleting address:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
 
 
@@ -156,5 +238,8 @@ module.exports = {
     registerUser,
     loginUser,
     getCrrentUser,
-    logoutUser
-}
+    logoutUser,
+    getUserAddresses,
+    addUserAddress,
+    deleteUserAddress
+};

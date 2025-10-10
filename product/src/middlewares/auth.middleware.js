@@ -19,6 +19,7 @@ function createAuthMiddleware(roles = ["user"]) {
             }
 
             req.user = decoded;
+            
             next();
         } catch (error) {
             return res.status(401).json({

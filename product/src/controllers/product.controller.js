@@ -1,22 +1,19 @@
 const productModel = require('../models/product.model');
-
+const { uploadImage } = require('../services/imagekit.service')
 
 async function createProduct(req, res) {
     try {
         const { title, description, priceAmount, priceCurrency = 'INR' } = req.body;
 
         let seller = req.user.id;
+        console.log("seller : ", seller);
 
         const price = {
             amount: Number(priceAmount),
             currency: priceCurrency
         }
 
-        if (!title || !amount) {
-            return res.status(400).json({
-                message: "title , priceamount are required",
-            });
-        }
+        const images = await Promise.all((req.files || []).map(file => uploadImage({ buffer: file.buffer })))
 
         const product = await productModel.create({
             title,
@@ -33,7 +30,7 @@ async function createProduct(req, res) {
         });
 
     } catch (error) {
-        console.error('Create product error', err);
+        console.error('Create product error', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 }

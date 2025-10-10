@@ -22,4 +22,4 @@ async function uploadImage({ buffer, folder = '/products' }) {
     };
 }
 
-module.exports = { imagekit, uploadImage };
+module.exports = { uploadImage };

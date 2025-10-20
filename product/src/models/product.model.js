@@ -25,14 +25,16 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    images:[
+    images: [
         {
-            url:String,
-            thumbnail:String,
-            id:String
+            url: String,
+            thumbnail: String,
+            id: String
         }
     ]
-})
+});
+
+productSchema.index({ title: 'text', description: 'text' });
 
 const ProductModel = mongoose.model('Product', productSchema);
 

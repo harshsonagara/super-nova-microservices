@@ -165,22 +165,22 @@ async function deleteProduct(req, res) {
     });
 }
 
-async function getSeller(req, res) {
+async function getProductBySeller(req, res) {
 
     try {
         const sellerId = req.user.id;
 
-        const { skip = 0, limit = 10 } = req.query;
+        const { skip = 0, limit = 20 } = req.query;
 
         const Products = await productModel
             .find({ seller: sellerId })
-            .skip(parseInt(skip))
-            .limit(parseInt(limit));
+            .skip(skip)
+            .limit(Math.min(limit, 20));
 
         return res.status(200).json({
             data: Products
         });
-        
+
     } catch (error) {
         console.error('Error in getSeller:', error);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -195,5 +195,5 @@ module.exports = {
     getProductById,
     updateProduct,
     deleteProduct,
-    getSeller
+    getProductBySeller
 }

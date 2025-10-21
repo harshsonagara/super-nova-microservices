@@ -24,7 +24,7 @@ router.get('/', productController.getProducts);
 
 
 // GET /api/products/seller
-router.get('/seller',createAuthMiddleware(["seller"]),productController.getSeller);
+router.get('/seller',createAuthMiddleware(["seller"]),productController.getProductBySeller);
 
 // GET /api/products/:id
 router.get('/:id',productController.getProductById);

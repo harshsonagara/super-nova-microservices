@@ -168,17 +168,19 @@ async function deleteProduct(req, res) {
 async function getSeller(req, res) {
 
     try {
-        const sellerId = req.user.id; // from JWT payload
+        const sellerId = req.user.id;
+
         const { skip = 0, limit = 10 } = req.query;
 
-        const products = await productModel
+        const Products = await productModel
             .find({ seller: sellerId })
             .skip(parseInt(skip))
             .limit(parseInt(limit));
 
         return res.status(200).json({
-            data: products
+            data: Products
         });
+        
     } catch (error) {
         console.error('Error in getSeller:', error);
         return res.status(500).json({ message: 'Internal Server Error' });

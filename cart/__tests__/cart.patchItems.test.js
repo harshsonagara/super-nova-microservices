@@ -52,12 +52,12 @@ describe('PATCH /api/cart/items/:productId', () => {
         await request(app)
             .post(postEndpoint)
             .set('Authorization', `Bearer ${token}`)
-            .send({ productId: existingProductId, qty: 2 });
+            .send({ productId: existingProductId, quantity: 2 });
 
         const res = await request(app)
             .patch(`${patchBase}/${existingProductId}`)
             .set('Authorization', `Bearer ${token}`)
-            .send({ qty: 5 });
+            .send({ quantity: 5 });
 
         expect(res.status).toBe(200);
         expect(res.body.message).toBe('Item updated');
@@ -69,7 +69,7 @@ describe('PATCH /api/cart/items/:productId', () => {
         const res = await request(app)
             .patch(`${patchBase}/${existingProductId}`)
             .set('Authorization', `Bearer ${token}`)
-            .send({ qty: 3 });
+            .send({ quantity: 3 });
         expect(res.status).toBe(404);
         expect(res.body.message).toBe('Cart not found');
     });
@@ -79,12 +79,12 @@ describe('PATCH /api/cart/items/:productId', () => {
         await request(app)
             .post(postEndpoint)
             .set('Authorization', `Bearer ${token}`)
-            .send({ productId: existingProductId, qty: 1 });
+            .send({ productId: existingProductId, quantity: 1 });
 
         const res = await request(app)
             .patch(`${patchBase}/${otherProductId}`)
             .set('Authorization', `Bearer ${token}`)
-            .send({ qty: 4 });
+            .send({ quantity: 4 });
 
         expect(res.status).toBe(404);
         expect(res.body.message).toBe('Item not found');
@@ -95,22 +95,22 @@ describe('PATCH /api/cart/items/:productId', () => {
         const res = await request(app)
             .patch(`${patchBase}/not-a-valid-id`)
             .set('Authorization', `Bearer ${token}`)
-            .send({ qty: 2 });
+            .send({ quantity: 2 });
         expect(res.status).toBe(400);
         expect(res.body.errors).toBeDefined();
     });
 
-    test('validation error invalid qty', async () => {
+    test('validation error invalid quantity', async () => {
         const token = signToken({ _id: userId, role: 'user' });
         await request(app)
             .post(postEndpoint)
             .set('Authorization', `Bearer ${token}`)
-            .send({ productId: existingProductId, qty: 1 });
+            .send({ productId: existingProductId, quantity: 1 });
 
         const res = await request(app)
             .patch(`${patchBase}/${existingProductId}`)
             .set('Authorization', `Bearer ${token}`)
-            .send({ qty: 0 });
+            .send({ quantity: 0 });
 
         expect(res.status).toBe(400);
         expect(res.body.errors).toBeDefined();
@@ -119,7 +119,7 @@ describe('PATCH /api/cart/items/:productId', () => {
     test('401 when no token', async () => {
         const res = await request(app)
             .patch(`${patchBase}/${existingProductId}`)
-            .send({ qty: 2 });
+            .send({ quantity: 2 });
         expect(res.status).toBe(401);
     });
 
@@ -128,7 +128,7 @@ describe('PATCH /api/cart/items/:productId', () => {
         const res = await request(app)
             .patch(`${patchBase}/${existingProductId}`)
             .set('Authorization', `Bearer ${token}`)
-            .send({ qty: 2 });
+            .send({ quantity: 2 });
         expect(res.status).toBe(403);
     });
 
@@ -136,7 +136,7 @@ describe('PATCH /api/cart/items/:productId', () => {
         const res = await request(app)
             .patch(`${patchBase}/${existingProductId}`)
             .set('Authorization', 'Bearer invalid.token.here')
-            .send({ qty: 2 });
+            .send({ quantity: 2 });
         expect(res.status).toBe(401);
     });
     

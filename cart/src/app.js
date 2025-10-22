@@ -10,4 +10,16 @@ app.use(express.json());
 app.use(cookieParser());
 
 
+//** Cart Routes */
+const cartRoutes = require('./routes/cart.routes');
+app.use('/api/cart', cartRoutes);
+
+
+
+
+
+
+
+
+
 module.exports = app;

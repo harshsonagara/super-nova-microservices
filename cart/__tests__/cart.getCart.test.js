@@ -55,11 +55,11 @@ describe('GET /api/cart', () => {
         await request(app)
             .post(postEndpoint)
             .set('Authorization', `Bearer ${token}`)
-            .send({ productId: productIdA, qty: 2 });
+            .send({ productId: productIdA, quantity: 2 });
         await request(app)
             .post(postEndpoint)
             .set('Authorization', `Bearer ${token}`)
-            .send({ productId: productIdB, qty: 3 });
+            .send({ productId: productIdB, quantity: 3 });
 
         const res = await request(app)
             .get(getEndpoint)
